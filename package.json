@@ -1,0 +1,17 @@
+{
+  "name": "todo-node-mysql",
+  "version": "1.0.0",
+  "description": "Todo app with node & mysql",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "javascript",
+    "nodejs",
+    "express"
+  ],
+  "author": "Dmitry Sokolov <sokolov333d@gmail.com>",
+  "license": "ISC"
+}

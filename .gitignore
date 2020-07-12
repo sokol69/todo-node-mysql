@@ -1,0 +1,14 @@
+.DS_Store
+node_modules
+public/bundle.*
+package-lock.json
+yarn.lock
+dist
+
+keys/keys.dev.js
+keys/index.js
+
+.env
+.env.production
+.env.staging
+.env.development
