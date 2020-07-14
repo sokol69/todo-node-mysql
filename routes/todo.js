@@ -3,8 +3,10 @@ const { Router } = require("express");
 const Todo = require("../models/todo");
 const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
+    const todos = await Todo.findAll();
+    res.status(200).json(todos);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -28,8 +30,12 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
+    const todo = await Todo.findByPk(+req.params.id);
+    todo.done = req.body.done;
+    await todo.save();
+    res.status(200).json({ todo });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -38,8 +44,16 @@ router.put("/:id", (req, res) => {
   }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
+    const todos = await Todo.findAll({
+      where: {
+        id: +req.params.id,
+      },
+    });
+    const todo = todos[0];
+    await todo.destroy();
+    res.status(204).json({});
   } catch (error) {
     console.log(error);
     res.status(500).json({

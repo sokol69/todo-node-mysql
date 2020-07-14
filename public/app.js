@@ -8,6 +8,16 @@ new Vue({
       todos: [],
     };
   },
+  created() {
+    fetch("/api/todo", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((todos) => {
+        this.todos = todos;
+      })
+      .catch((error) => console.log(error));
+  },
   methods: {
     addTodo() {
       const title = this.todoTitle.trim();
@@ -27,7 +37,26 @@ new Vue({
         .catch((error) => console.log(error));
     },
     removeTodo(id) {
-      this.todos = this.todos.filter((t) => t.id !== id);
+      fetch(`/api/todo/${id}`, {
+        method: "DELETE",
+      })
+        .then(() => {
+          this.todos = this.todos.filter((t) => t.id !== id);
+        })
+        .catch((error) => console.log(error));
+    },
+    completeTodo(id) {
+      fetch(`/api/todo/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ done: true }),
+      })
+        .then((res) => res.json())
+        .then(({ todo }) => {
+          const idx = this.todos.findIndex((t) => t.id === todo.id);
+          this.todos[idx].updatedAt = todo.updatedAt;
+        })
+        .catch((error) => console.log(error));
     },
   },
   filters: {
