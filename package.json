@@ -15,6 +15,7 @@
   "author": "Dmitry Sokolov <sokolov333d@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@types/sequelize": "^4.28.9",
     "express": "^4.17.1",
     "express-graphql": "^0.11.0",
     "graphql": "^15.3.0",
