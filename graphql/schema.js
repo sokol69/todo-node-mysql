@@ -23,4 +23,14 @@ module.exports = buildSchema(`
     test: TestType!
     getTodos: [Todo!]!
   }
+
+  input TodoInput {
+    title: String!
+  }
+
+  type Mutation {
+    createTodo(todo: TodoInput!): Todo!
+    completeTodo(id: ID!): Todo!
+    removeTodo(id: ID!): Boolean!
+  }
 `);

@@ -36,21 +36,42 @@ new Vue({
       if (!title) {
         return;
       }
-      fetch("/api/todo", {
+      const query = `
+        mutation {
+          createTodo(todo: {title: "${title}"}) {
+            id title done createdAt updatedAt
+          }
+        }
+      `;
+      fetch("/graphql", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ query }),
       })
         .then((res) => res.json())
-        .then(({ todo }) => {
+        .then((response) => {
+          const todo = response.data.createTodo;
           this.todos.push(todo);
           this.todoTitle = "";
         })
         .catch((error) => console.log(error));
     },
     removeTodo(id) {
-      fetch(`/api/todo/${id}`, {
-        method: "DELETE",
+      const query = `
+        mutation {
+          removeTodo(id: "${id}")
+        }
+      `;
+      fetch("/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ query }),
       })
         .then(() => {
           this.todos = this.todos.filter((t) => t.id !== id);
@@ -58,15 +79,25 @@ new Vue({
         .catch((error) => console.log(error));
     },
     completeTodo(id) {
-      fetch(`/api/todo/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ done: true }),
+      const query = `
+        mutation {
+          completeTodo(id: "${id}") {
+            updatedAt
+          }
+        }
+      `;
+      fetch("/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ query }),
       })
         .then((res) => res.json())
-        .then(({ todo }) => {
-          const idx = this.todos.findIndex((t) => t.id === todo.id);
-          this.todos[idx].updatedAt = todo.updatedAt;
+        .then((response) => {
+          const idx = this.todos.findIndex((t) => t.id === id);
+          this.todos[idx].updatedAt = response.data.completeTodo.updatedAt;
         })
         .catch((error) => console.log(error));
     },
